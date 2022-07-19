@@ -3,60 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.add.AddTaskFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/tbAddFragment"
+    <EditText
+        android:id="@+id/etTitle"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/purple_700"
-        app:titleTextColor="@color/white"
-        app:title="Edit task"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="60dp"
+        android:hint="@string/title"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <EditText
+        android:id="@+id/etPomodoro"
         android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="@string/pomodoros"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etTitle" />
+
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="10dp"
+        android:gravity="start|top"
+        android:hint="@string/description"
+        android:inputType="textImeMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tbAddFragment">
-
-        <EditText
-            android:id="@+id/etTitle"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="@string/title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/etPomodoro"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:hint="@string/pomodoros"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etTitle" />
-
-        <EditText
-            android:id="@+id/etDescription"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:gravity="start|top"
-            android:hint="@string/description"
-            android:inputType="textImeMultiLine"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/etPomodoro" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@id/etPomodoro" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
