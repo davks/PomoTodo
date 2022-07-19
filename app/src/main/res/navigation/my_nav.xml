@@ -3,41 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/todoListFragment">
+    app:startDestination="@id/listTaskFragment">
     <fragment
-        android:id="@+id/todoListFragment"
-        android:name="eu.davidknotek.pomotodo.TodoListFragment"
-        android:label="fragment_todo_list"
-        tools:layout="@layout/fragment_list_task" >
+        android:id="@+id/listTaskFragment"
+        android:name="eu.davidknotek.pomotodo.fragments.list.ListTaskFragment"
+        android:label="fragment_task_list"
+        tools:layout="@layout/fragment_list_task">
         <action
             android:id="@+id/action_todoListFragment_to_editTodoFragment"
-            app:destination="@id/editTodoFragment" />
+            app:destination="@id/editTaskFragment" />
         <action
             android:id="@+id/action_todoListFragment_to_addTodoFragment"
-            app:destination="@id/addTodoFragment" />
+            app:destination="@id/addTaskFragment" />
         <action
             android:id="@+id/action_todoListFragment_to_pomodoroFragment2"
             app:destination="@id/pomodoroFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addTodoFragment"
-        android:name="eu.davidknotek.pomotodo.AddTodoFragment"
-        android:label="fragment_add_todo"
-        tools:layout="@layout/fragment_add_task" >
+        android:id="@+id/addTaskFragment"
+        android:name="eu.davidknotek.pomotodo.fragments.add.AddTaskFragment"
+        android:label="fragment_add_task"
+        tools:layout="@layout/fragment_add_task">
         <action
             android:id="@+id/action_addTodoFragment_to_todoListFragment"
-            app:destination="@id/todoListFragment"
-            app:popUpTo="@id/todoListFragment" />
+            app:destination="@id/listTaskFragment"
+            app:popUpTo="@id/listTaskFragment" />
     </fragment>
     <fragment
-        android:id="@+id/editTodoFragment"
-        android:name="eu.davidknotek.pomotodo.EditTodoFragment"
-        android:label="fragment_edit_todo"
-        tools:layout="@layout/fragment_edit_task" >
+        android:id="@+id/editTaskFragment"
+        android:name="eu.davidknotek.pomotodo.fragments.update.EditTaskFragment"
+        android:label="fragment_edit_task">
         <action
             android:id="@+id/action_editTodoFragment_to_todoListFragment"
-            app:destination="@id/todoListFragment"
-            app:popUpTo="@id/todoListFragment" />
+            app:destination="@id/listTaskFragment"
+            app:popUpTo="@id/listTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/pomodoroFragment"
@@ -46,7 +45,7 @@
         tools:layout="@layout/fragment_pomodoro" >
         <action
             android:id="@+id/action_pomodoroFragment_to_todoListFragment"
-            app:destination="@id/todoListFragment"
-            app:popUpTo="@id/todoListFragment" />
+            app:destination="@id/listTaskFragment"
+            app:popUpTo="@id/listTaskFragment" />
     </fragment>
 </navigation>

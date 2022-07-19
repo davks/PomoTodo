@@ -6,18 +6,19 @@ import eu.davidknotek.pomotodo.data.models.TaskEntity
 
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM tasks ORDER BY id ASC")
-    fun getAllData(): LiveData<List<TaskEntity>>
 
-    @Insert
-    fun addTask(taskEntity: TaskEntity)
+    @Query("SELECT * FROM tasks ORDER BY id ASC")
+    fun getAllTasks(): LiveData<List<TaskEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addTask(taskEntity: TaskEntity)
 
     @Update
-    fun updateTask(taskEntity: TaskEntity)
+    suspend fun updateTask(taskEntity: TaskEntity)
 
     @Delete
-    fun deleteTask(taskEntity: TaskEntity)
+    suspend fun deleteTask(taskEntity: TaskEntity)
 
     @Query("DELETE FROM tasks")
-    fun deleteAllTask()
+    suspend fun deleteAllTask()
 }

@@ -12,11 +12,12 @@
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/purple_700"
         app:titleTextColor="@color/white"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.MaterialComponents.Light"
         app:title="Tasks"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/navHostFragment"
