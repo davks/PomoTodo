@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/todoListFragment">
+    <fragment
+        android:id="@+id/todoListFragment"
+        android:name="eu.davidknotek.pomotodo.TodoListFragment"
+        android:label="fragment_todo_list"
+        tools:layout="@layout/fragment_list_task" >
+        <action
+            android:id="@+id/action_todoListFragment_to_editTodoFragment"
+            app:destination="@id/editTodoFragment" />
+        <action
+            android:id="@+id/action_todoListFragment_to_addTodoFragment"
+            app:destination="@id/addTodoFragment" />
+        <action
+            android:id="@+id/action_todoListFragment_to_pomodoroFragment2"
+            app:destination="@id/pomodoroFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTodoFragment"
+        android:name="eu.davidknotek.pomotodo.AddTodoFragment"
+        android:label="fragment_add_todo"
+        tools:layout="@layout/fragment_add_task" >
+        <action
+            android:id="@+id/action_addTodoFragment_to_todoListFragment"
+            app:destination="@id/todoListFragment"
+            app:popUpTo="@id/todoListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editTodoFragment"
+        android:name="eu.davidknotek.pomotodo.EditTodoFragment"
+        android:label="fragment_edit_todo"
+        tools:layout="@layout/fragment_edit_task" >
+        <action
+            android:id="@+id/action_editTodoFragment_to_todoListFragment"
+            app:destination="@id/todoListFragment"
+            app:popUpTo="@id/todoListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pomodoroFragment"
+        android:name="eu.davidknotek.pomotodo.PomodoroFragment"
+        android:label="fragment_pomodoro"
+        tools:layout="@layout/fragment_pomodoro" >
+        <action
+            android:id="@+id/action_pomodoroFragment_to_todoListFragment"
+            app:destination="@id/todoListFragment"
+            app:popUpTo="@id/todoListFragment" />
+    </fragment>
+</navigation>
