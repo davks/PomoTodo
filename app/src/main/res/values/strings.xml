@@ -6,4 +6,8 @@
     <string name="description">Description</string>
     <string name="pomodoros">Pomodoros</string>
     <string name="title">Title</string>
+    <string name="save">Save</string>
+    <string name="delete_all">Delete All</string>
+    <string name="delete">Delete</string>
+    <string name="pomodoros_text">Pomodoros:</string>
 </resources>

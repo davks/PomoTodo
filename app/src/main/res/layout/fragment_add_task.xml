@@ -16,28 +16,52 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/etPomodoro"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:hint="@string/pomodoros"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/pomodoroText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pomodoros_text"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etTitle" />
+        app:layout_constraintTop_toBottomOf="@id/etTitle"/>
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sbPomodoro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="10"
+        android:min="1"
+        android:progress="1"
+        app:layout_constraintTop_toTopOf="@id/pomodoroText"
+        app:layout_constraintEnd_toStartOf="@id/tvPomodoro"
+        app:layout_constraintStart_toEndOf="@+id/pomodoroText"
+        app:layout_constraintBottom_toBottomOf="@+id/pomodoroText" />
+
+    <TextView
+        android:id="@+id/tvPomodoro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:layout_marginStart="18dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@id/etTitle"
+        app:layout_constraintTop_toTopOf="@id/pomodoroText"
+        app:layout_constraintBottom_toBottomOf="@id/pomodoroText"/>
 
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@android:color/transparent"
         android:gravity="start|top"
         android:hint="@string/description"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="24dp"
         android:inputType="textImeMultiLine"
-        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etPomodoro" />
+        app:layout_constraintTop_toBottomOf="@+id/sbPomodoro" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

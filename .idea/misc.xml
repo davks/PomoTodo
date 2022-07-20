@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_play_circle_outline.xml" value="0.132" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_add_task.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_add_todo.xml" value="0.24895833333333334" />
@@ -11,6 +12,10 @@
         <entry key="app/src/main/res/layout/fragment_list_task.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_pomodoro.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_todo_list.xml" value="0.24895833333333334" />
+        <entry key="app/src/main/res/layout/task_row.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/menu/add_menu.xml" value="0.24791666666666667" />
+        <entry key="app/src/main/res/menu/edit_menu.xml" value="0.12395833333333334" />
+        <entry key="app/src/main/res/menu/list_menu.xml" value="0.24791666666666667" />
       </map>
     </option>
   </component>
