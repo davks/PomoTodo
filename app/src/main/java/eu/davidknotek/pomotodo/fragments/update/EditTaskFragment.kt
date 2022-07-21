@@ -45,8 +45,8 @@ class EditTaskFragment : Fragment() {
     private fun setEditTask() {
         binding.etTitle.setText(args.currentItem.title)
         binding.etDescription.setText(args.currentItem.description)
-        binding.sbPomodoro.progress = args.currentItem.pomoCount
-        binding.tvPomodoro.text = args.currentItem.pomoCount.toString()
+        binding.sbPomodoro.progress = args.currentItem.numberOfPomodoros
+        binding.tvPomodoro.text = args.currentItem.numberOfPomodoros.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -69,11 +69,11 @@ class EditTaskFragment : Fragment() {
 
     private fun saveTask() {
         val title = binding.etTitle.text.toString()
+        val numberOfPomodoros = binding.sbPomodoro.progress
         val description = binding.etDescription.text.toString()
-        val pomodoroCount = binding.sbPomodoro.progress
 
         if (title.isNotEmpty()) {
-            val task = TaskEntity(args.currentItem.id, title, description, pomodoroCount.toInt(), args.currentItem.pomoFinish)
+            val task = TaskEntity(args.currentItem.id, title, description, numberOfPomodoros.toInt(), args.currentItem.numberOfFinishedPomodoros)
             taskViewModel.updateTask(task)
             findNavController().navigate(R.id.action_editTaskFragment_to_taskListFragment)
         } else {
@@ -89,7 +89,7 @@ class EditTaskFragment : Fragment() {
             }
             .setNegativeButton("No") {_, _ ->}
             .setTitle("Delete task")
-            .setMessage("Delete task: ${args.currentItem.title}.")
+            .setMessage("Are you sure you want to delete the task: ${args.currentItem.title}?")
             .create().show()
     }
 }

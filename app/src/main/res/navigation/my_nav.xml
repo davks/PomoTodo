@@ -10,14 +10,14 @@
         android:label="Tasks"
         tools:layout="@layout/fragment_list_task">
         <action
-            android:id="@+id/action_taskListFragment_to_editTaskFragment"
-            app:destination="@id/editTaskFragment" />
-        <action
             android:id="@+id/action_taskListFragment_to_addTaskFragment"
             app:destination="@id/addTaskFragment" />
         <action
-            android:id="@+id/action_taskListFragment_to_pomodoroFragment2"
+            android:id="@+id/action_listTaskFragment_to_pomodoroFragment"
             app:destination="@id/pomodoroFragment" />
+        <action
+            android:id="@+id/action_listTaskFragment_to_editTaskFragment"
+            app:destination="@id/editTaskFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTaskFragment"
@@ -32,7 +32,8 @@
     <fragment
         android:id="@+id/editTaskFragment"
         android:name="eu.davidknotek.pomotodo.fragments.update.EditTaskFragment"
-        android:label="Edit task">
+        android:label="Edit task"
+        tools:layout="@layout/fragment_edit_task">
         <action
             android:id="@+id/action_editTaskFragment_to_taskListFragment"
             app:destination="@id/listTaskFragment"
@@ -43,12 +44,15 @@
     </fragment>
     <fragment
         android:id="@+id/pomodoroFragment"
-        android:name="eu.davidknotek.pomotodo.PomodoroFragment"
+        android:name="eu.davidknotek.pomotodo.fragments.pomodoro.PomodoroFragment"
         android:label="fragment_pomodoro"
-        tools:layout="@layout/fragment_pomodoro" >
+        tools:layout="@layout/fragment_pomodoro">
         <action
             android:id="@+id/action_pomodoroFragment_to_taskListFragment"
             app:destination="@id/listTaskFragment"
             app:popUpTo="@id/listTaskFragment" />
+        <argument
+            android:name="currentItem"
+            app:argType="eu.davidknotek.pomotodo.data.models.TaskEntity" />
     </fragment>
 </navigation>

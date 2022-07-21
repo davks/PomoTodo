@@ -15,8 +15,8 @@ data class TaskEntity (
     var description: String,
 
     @ColumnInfo(name = "pomo_count")
-    var pomoCount: Int,
+    var numberOfPomodoros: Int,
 
     @ColumnInfo(name = "pomo_finish")
-    var pomoFinish: Int
+    var numberOfFinishedPomodoros: Int
 ): Parcelable

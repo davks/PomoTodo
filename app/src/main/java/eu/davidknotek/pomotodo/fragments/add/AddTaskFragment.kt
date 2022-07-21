@@ -56,11 +56,11 @@ class AddTaskFragment : Fragment() {
 
     private fun saveTask() {
         val title = binding.etTitle.text.toString()
-        val pomodoroCount = binding.sbPomodoro.progress
+        val numberOfPomodoros = binding.sbPomodoro.progress
         val description = binding.etDescription.text.toString()
 
         if (title.isNotEmpty()) {
-            val task = TaskEntity(0, title, description, pomodoroCount, 0)
+            val task = TaskEntity(0, title, description, numberOfPomodoros, 0)
             taskViewModel.addTask(task)
             findNavController().navigate(R.id.action_addTaskFragment_to_taskListFragment)
         } else {
