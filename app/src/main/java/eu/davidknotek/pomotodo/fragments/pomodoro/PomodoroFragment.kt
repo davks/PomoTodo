@@ -1,10 +1,11 @@
 package eu.davidknotek.pomotodo.fragments.pomodoro
 
+import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -34,8 +35,10 @@ class PomodoroFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // Hide a toolbar from activity
+        val myWindow = (activity as AppCompatActivity).window
         (activity as AppCompatActivity).supportActionBar?.hide()
+        myWindow.statusBarColor = Color.BLACK
+        myWindow.navigationBarColor = Color.BLACK
     }
 
     override fun onStop() {
