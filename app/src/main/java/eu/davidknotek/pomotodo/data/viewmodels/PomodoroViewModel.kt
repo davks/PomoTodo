@@ -1,11 +1,14 @@
 package eu.davidknotek.pomotodo.data.viewmodels
 
 import android.app.Application
+import android.content.ContentValues.TAG
 import android.os.CountDownTimer
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import eu.davidknotek.pomotodo.R
 import eu.davidknotek.pomotodo.data.TaskDatabase
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 import eu.davidknotek.pomotodo.data.repository.TaskRepository
@@ -29,32 +32,17 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     private var workDurationInMillis: Long = 10000
     private var breakDurationInMillis: Long = 5000
 
-    private var isBreakEnabled = true
+    private var currentStatus = PomodoroStatus.WORK
+    private var pomodoroCount = 0
 
     init {
         repository = TaskRepositoryImpl(taskDao)
         this.task.value = taskEntity
         settingsPomodoro.load()
-//        workDurationInMillis = 1000 * 60 * settingsPomodoro.workDuration.toLong() //(1s*60=1min*25min)
-//        breakDurationInMillis = 1000 * 60 * settingsPomodoro.breakDuration.toLong()
+        workDurationInMillis = 1000 * 60 * settingsPomodoro.workDuration.toLong() //(1s*60=1min*25min)
+        breakDurationInMillis = 1000 * 60 * settingsPomodoro.breakDuration.toLong()
         currentTimeDurationInMillis.value = workDurationInMillis
         status.value = ""
-    }
-
-    fun updateTask() {
-        val id = taskEntity.id
-        val title = taskEntity.title
-        val description = taskEntity.description
-        val numberOfPomodoros = taskEntity.numberOfPomodoros
-        val numberOfFinishedPomodoros = taskEntity.numberOfFinishedPomodoros + 1
-
-        taskEntity =
-            TaskEntity(id, title, description, numberOfPomodoros, numberOfFinishedPomodoros)
-        task.value = taskEntity
-
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.updateTask(taskEntity)
-        }
     }
 
     fun startOrPauseTask() {
@@ -69,7 +57,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     fun stopTask() {
         resetPomodoro()
-        isBreakEnabled = true
+        currentStatus = PomodoroStatus.WORK
     }
 
     fun formatPomodoroTime(millis: Long): String {
@@ -83,16 +71,19 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
             override fun onTick(millisUntilFinish: Long) {
                 isPomodoroRunning.value = true
                 currentTimeDurationInMillis.value = millisUntilFinish
+                setStatusString()
             }
 
             override fun onFinish() {
                 resetPomodoro()
-                if (isBreakEnabled) {
+                if (currentStatus == PomodoroStatus.WORK) {
                     updateTask()
                     startBreakDuration()
-                    isBreakEnabled = false
+                    currentStatus = PomodoroStatus.BREAK
+                    pomodoroCount++
+                    Log.d(TAG, "onFinish: $pomodoroCount")
                 } else {
-                    isBreakEnabled = true
+                    currentStatus = PomodoroStatus.WORK
                 }
             }
         }.start()
@@ -112,12 +103,36 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
         status.value = ""
     }
 
+    private fun updateTask() {
+        val id = taskEntity.id
+        val title = taskEntity.title
+        val description = taskEntity.description
+        val numberOfPomodoros = taskEntity.numberOfPomodoros
+        val numberOfFinishedPomodoros = taskEntity.numberOfFinishedPomodoros + 1
+
+        taskEntity =
+            TaskEntity(id, title, description, numberOfPomodoros, numberOfFinishedPomodoros)
+        task.value = taskEntity
+
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateTask(taskEntity)
+        }
+    }
+
     private fun startBreakDuration() {
         currentTimeDurationInMillis.value = breakDurationInMillis
         if (settingsPomodoro.breakContinues) {
             android.os.Handler(Looper.getMainLooper()).postDelayed({
                 startPomodoro()
             }, 2000)
+        }
+    }
+
+    private fun setStatusString() {
+        if (currentStatus == PomodoroStatus.WORK) {
+            status.value = getApplication<Application>().resources.getString(R.string.statusWork)
+        } else {
+            status.value = getApplication<Application>().resources.getString(R.string.statusBreak)
         }
     }
 }

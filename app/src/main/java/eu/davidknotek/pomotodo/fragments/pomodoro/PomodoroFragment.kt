@@ -69,10 +69,10 @@ class PomodoroFragment : Fragment() {
         }
 
         pomodoroViewModel.isPomodoroRunning.observe(viewLifecycleOwner) {
-            if (!it) {
-                binding.ivStartPausePomodoro.setImageResource(R.drawable.ic_play_arrow)
-            } else {
+            if (it) {
                 binding.ivStartPausePomodoro.setImageResource(R.drawable.ic_pause)
+            } else {
+                binding.ivStartPausePomodoro.setImageResource(R.drawable.ic_play_arrow)
             }
         }
 
