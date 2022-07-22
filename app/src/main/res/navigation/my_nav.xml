@@ -11,16 +11,32 @@
         tools:layout="@layout/fragment_list_task">
         <action
             android:id="@+id/action_taskListFragment_to_addTaskFragment"
-            app:destination="@id/addTaskFragment" />
+            app:destination="@id/addTaskFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_listTaskFragment_to_pomodoroFragment"
-            app:destination="@id/pomodoroFragment" />
+            app:destination="@id/pomodoroFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_listTaskFragment_to_editTaskFragment"
-            app:destination="@id/editTaskFragment" />
+            app:destination="@id/editTaskFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
         <action
             android:id="@+id/action_listTaskFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/addTaskFragment"
@@ -30,6 +46,8 @@
         <action
             android:id="@+id/action_addTaskFragment_to_taskListFragment"
             app:destination="@id/listTaskFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
             app:popUpTo="@id/listTaskFragment" />
     </fragment>
     <fragment
@@ -40,6 +58,8 @@
         <action
             android:id="@+id/action_editTaskFragment_to_taskListFragment"
             app:destination="@id/listTaskFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
             app:popUpTo="@id/listTaskFragment" />
         <argument
             android:name="currentItem"
@@ -53,6 +73,8 @@
         <action
             android:id="@+id/action_pomodoroFragment_to_taskListFragment"
             app:destination="@id/listTaskFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
             app:popUpTo="@id/listTaskFragment" />
         <argument
             android:name="currentItem"
@@ -66,6 +88,8 @@
         <action
             android:id="@+id/action_settingsFragment_to_listTaskFragment"
             app:destination="@id/listTaskFragment"
+            app:enterAnim="@anim/from_left"
+            app:exitAnim="@anim/to_right"
             app:popUpTo="@id/listTaskFragment" />
     </fragment>
 </navigation>
