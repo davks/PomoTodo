@@ -1,6 +1,6 @@
 package eu.davidknotek.pomotodo.util
 
-fun setPomodoroString(pomoCount: Int, pomoFinish: Int): String {
+fun formatPomodoroFinished(pomoCount: Int, pomoFinish: Int): String {
     var pomoString = ""
 
     for (i in 1..pomoFinish) {

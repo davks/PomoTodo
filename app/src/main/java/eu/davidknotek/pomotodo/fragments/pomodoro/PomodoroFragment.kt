@@ -11,7 +11,7 @@ import eu.davidknotek.pomotodo.R
 import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModel
 import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModelFactory
 import eu.davidknotek.pomotodo.databinding.FragmentPomodoroBinding
-import eu.davidknotek.pomotodo.util.setPomodoroString
+import eu.davidknotek.pomotodo.util.formatPomodoroFinished
 
 
 class PomodoroFragment : Fragment() {
@@ -50,7 +50,7 @@ class PomodoroFragment : Fragment() {
 
     private fun setupPomodoroFragment() {
         binding.tvTask.text = args.currentItem.title
-        binding.tvTaskPomodoros.text = setPomodoroString(args.currentItem.numberOfPomodoros, args.currentItem.numberOfFinishedPomodoros)
+        binding.tvTaskPomodoros.text = formatPomodoroFinished(args.currentItem.numberOfPomodoros, args.currentItem.numberOfFinishedPomodoros)
     }
 
     private fun setupListeners() {
@@ -64,8 +64,8 @@ class PomodoroFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        pomodoroViewModel.restSeconds.observe(viewLifecycleOwner) {
-            binding.tvTime.text = setPomodoroTimeFormat(it)
+        pomodoroViewModel.currentTimeDurationInMillis.observe(viewLifecycleOwner) {
+            binding.tvTime.text = pomodoroViewModel.formatPomodoroTime(it)
         }
 
         pomodoroViewModel.isPomodoroRunning.observe(viewLifecycleOwner) {
@@ -77,21 +77,7 @@ class PomodoroFragment : Fragment() {
         }
 
         pomodoroViewModel.task.observe(viewLifecycleOwner) {
-            binding.tvTaskPomodoros.text = setPomodoroString(args.currentItem.numberOfPomodoros, it.numberOfFinishedPomodoros)
-        }
-    }
-
-    private fun setPomodoroTimeFormat(time: Int): String {
-        val minutes = getDoubleDigits(time / 60)
-        val seconds = getDoubleDigits(time % 60)
-
-        return "$minutes:$seconds"
-    }
-
-    private fun getDoubleDigits(number: Int): String {
-        return when {
-            number.toString().length == 1 -> "0$number"
-            else -> number.toString()
+            binding.tvTaskPomodoros.text = formatPomodoroFinished(args.currentItem.numberOfPomodoros, it.numberOfFinishedPomodoros)
         }
     }
 }

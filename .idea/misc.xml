@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/layout/fragment_edit_todo.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_list_task.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_pomodoro.xml" value="0.24895833333333334" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_todo_list.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/row_task.xml" value="0.33" />
         <entry key="app/src/main/res/layout/task_row.xml" value="0.24791666666666667" />

@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_listTaskFragment_to_editTaskFragment"
             app:destination="@id/editTaskFragment" />
+        <action
+            android:id="@+id/action_listTaskFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/addTaskFragment"
@@ -54,5 +57,15 @@
         <argument
             android:name="currentItem"
             app:argType="eu.davidknotek.pomotodo.data.models.TaskEntity" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="eu.davidknotek.pomotodo.fragments.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_listTaskFragment"
+            app:destination="@id/listTaskFragment"
+            app:popUpTo="@id/listTaskFragment" />
     </fragment>
 </navigation>

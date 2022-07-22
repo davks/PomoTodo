@@ -53,6 +53,10 @@ class ListTaskFragment : Fragment() {
                 deleteAllTasks()
                 true
             }
+            R.id.settings -> {
+                findNavController().navigate(R.id.action_listTaskFragment_to_settingsFragment)
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

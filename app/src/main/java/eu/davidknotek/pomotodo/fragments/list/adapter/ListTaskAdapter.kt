@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 import eu.davidknotek.pomotodo.databinding.RowTaskBinding
 import eu.davidknotek.pomotodo.fragments.list.ListTaskFragmentDirections
-import eu.davidknotek.pomotodo.util.setPomodoroString
+import eu.davidknotek.pomotodo.util.formatPomodoroFinished
 
 class ListTaskAdapter: RecyclerView.Adapter<ListTaskAdapter.MyViewHolder>() {
     private var data = emptyList<TaskEntity>()
@@ -21,7 +21,7 @@ class ListTaskAdapter: RecyclerView.Adapter<ListTaskAdapter.MyViewHolder>() {
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val currentItem = data[position]
         holder.itemHolding.tvTitle.text = currentItem.title
-        holder.itemHolding.tvPomodoro.text = setPomodoroString(currentItem.numberOfPomodoros, currentItem.numberOfFinishedPomodoros)
+        holder.itemHolding.tvPomodoro.text = formatPomodoroFinished(currentItem.numberOfPomodoros, currentItem.numberOfFinishedPomodoros)
 
         holder.itemHolding.rowBackground.setOnClickListener { editTask(currentItem, holder) }
         holder.itemHolding.ivStartPomodoro.setOnClickListener { startPomodoro(currentItem, holder) }

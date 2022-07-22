@@ -10,6 +10,7 @@ import eu.davidknotek.pomotodo.data.TaskDatabase
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 import eu.davidknotek.pomotodo.data.repository.TaskRepository
 import eu.davidknotek.pomotodo.data.repository.TaskRepositoryImpl
+import eu.davidknotek.pomotodo.util.SettingsPomodoro
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -17,22 +18,25 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     AndroidViewModel(application) {
     private val taskDao = TaskDatabase.getDatabase(application).taskDao()
     private val repository: TaskRepository
+    private val settingsPomodoro = SettingsPomodoro(application.applicationContext)
 
     var isPomodoroRunning = MutableLiveData<Boolean>()
-    var restSeconds = MutableLiveData<Int>()
     var task = MutableLiveData<TaskEntity>()
+    var currentTimeDurationInMillis = MutableLiveData<Long>()
 
     private var pomodoroTimer: CountDownTimer? = null
-    private var workDuration: Long = 1000 * 10 //(1s*60=1min*25min)
-    private var pauseDuration: Long = 1000 * 5
+    private var workDurationInMillis: Long = 10000
+    private var breakDurationInMillis: Long = 5000
 
-    private var restTimeDuration = workDuration
-    private var isPauseDurationFinished = false
+    private var endOfBreak = false // isBreak
 
     init {
         repository = TaskRepositoryImpl(taskDao)
-        restSeconds.value = (restTimeDuration / 1000).toInt()
         this.task.value = taskEntity
+        settingsPomodoro.load()
+        workDurationInMillis = 1000 * 60 * settingsPomodoro.workDuration.toLong() //(1s*60=1min*25min)
+        breakDurationInMillis = 1000 * 60 * settingsPomodoro.breakDuration.toLong()
+        currentTimeDurationInMillis.value = workDurationInMillis
     }
 
     fun updateTask() {
@@ -63,25 +67,30 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     fun stopTask() {
         resetPomodoro()
-        isPauseDurationFinished = false
+        endOfBreak = false
+    }
+
+    fun formatPomodoroTime(millis: Long): String {
+        val minutes = ((millis / 60000) % 60).toInt()
+        val seconds = ((millis / 1000) % 60).toInt()
+        return "${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}"
     }
 
     private fun startPomodoro() {
-        pomodoroTimer = object : CountDownTimer(restTimeDuration, 1000) {
+        pomodoroTimer = object : CountDownTimer(currentTimeDurationInMillis.value!!, 1000) {
             override fun onTick(millisUntilFinish: Long) {
                 isPomodoroRunning.value = true
-                restTimeDuration = millisUntilFinish
-                restSeconds.value = (restTimeDuration / 1000).toInt()
+                currentTimeDurationInMillis.value = millisUntilFinish
             }
 
             override fun onFinish() {
                 resetPomodoro()
-                if (!isPauseDurationFinished) {
+                if (!endOfBreak) {
                     updateTask()
-                    startPauseDuration()
-                    isPauseDurationFinished = true
+                    startBreakDuration()
+                    endOfBreak = true
                 } else {
-                    isPauseDurationFinished = false
+                    endOfBreak = false
                 }
             }
         }.start()
@@ -97,15 +106,15 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
             pomodoroTimer = null
         }
         isPomodoroRunning.value = false
-        restTimeDuration = workDuration
-        restSeconds.value = (restTimeDuration / 1000).toInt()
+        currentTimeDurationInMillis.value = workDurationInMillis
     }
 
-    private fun startPauseDuration() {
-        restTimeDuration = pauseDuration
-        restSeconds.value = (restTimeDuration / 1000).toInt()
-        android.os.Handler(Looper.getMainLooper()).postDelayed({
-            startPomodoro()
-        }, 2000)
+    private fun startBreakDuration() {
+        currentTimeDurationInMillis.value = breakDurationInMillis
+        if (settingsPomodoro.breakContinues) {
+            android.os.Handler(Looper.getMainLooper()).postDelayed({
+                startPomodoro()
+            }, 2000)
+        }
     }
 }
