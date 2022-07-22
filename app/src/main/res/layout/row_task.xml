@@ -11,9 +11,8 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"
-        android:text="Task"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivStartPomodoro"
@@ -23,7 +22,6 @@
         android:id="@+id/tvPomodoro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1/5"
         app:layout_constraintStart_toStartOf="@id/tvTitle"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintBottom_toBottomOf="@id/ivStartPomodoro"/>
@@ -38,6 +36,7 @@
         android:src="@drawable/ic_play_circle_outline"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:contentDescription="@string/start" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

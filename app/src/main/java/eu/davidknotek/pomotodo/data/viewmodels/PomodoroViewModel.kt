@@ -2,6 +2,8 @@ package eu.davidknotek.pomotodo.data.viewmodels
 
 import android.app.Application
 import android.content.ContentValues.TAG
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.CountDownTimer
 import android.os.Looper
 import android.util.Log
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     AndroidViewModel(application) {
+    private val app = application
     private val taskDao = TaskDatabase.getDatabase(application).taskDao()
     private val repository: TaskRepository
     private val settingsPomodoro = SettingsPomodoro(application.applicationContext)
@@ -35,6 +38,8 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     private var currentStatus = PomodoroStatus.WORK
     private var pomodoroCount = 0
 
+    private var player: MediaPlayer? = null
+
     init {
         repository = TaskRepositoryImpl(taskDao)
         this.task.value = taskEntity
@@ -43,6 +48,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
         breakDurationInMillis = 1000 * 60 * settingsPomodoro.breakDuration.toLong()
         currentTimeDurationInMillis.value = workDurationInMillis
         status.value = ""
+        playerSetup()
     }
 
     fun startOrPauseTask() {
@@ -76,6 +82,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
             override fun onFinish() {
                 resetPomodoro()
+                player?.start()
                 if (currentStatus == PomodoroStatus.WORK) {
                     updateTask()
                     startBreakDuration()
@@ -130,9 +137,20 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     private fun setStatusString() {
         if (currentStatus == PomodoroStatus.WORK) {
-            status.value = getApplication<Application>().resources.getString(R.string.statusWork)
+            status.value = app.resources.getString(R.string.statusWork)
         } else {
-            status.value = getApplication<Application>().resources.getString(R.string.statusBreak)
+            status.value = app.resources.getString(R.string.statusBreak)
+        }
+    }
+
+    private fun playerSetup() {
+        try {
+            val soundUri = Uri.parse("android.resource://eu.davidknotek.pomotodo/${R.raw.press_start}")
+            player = MediaPlayer.create(app, soundUri)
+            player?.isLooping = false
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

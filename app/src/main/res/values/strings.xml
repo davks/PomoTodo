@@ -15,5 +15,8 @@
     <string name="length_of_pomo">Length of pomodoro</string>
     <string name="settings">Settings</string>
     <string name="statusBreak">Break</string>
-    <string name="statusWork">Working</string>
+    <string name="statusWork">Work</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="empty">Empty</string>
 </resources>

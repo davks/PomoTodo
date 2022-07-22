@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ListAdapter
 import eu.davidknotek.pomotodo.R
+import eu.davidknotek.pomotodo.data.viewmodels.SharedViewModel
 import eu.davidknotek.pomotodo.data.viewmodels.TaskViewModel
 import eu.davidknotek.pomotodo.databinding.FragmentListTaskBinding
 import eu.davidknotek.pomotodo.fragments.list.adapter.ListTaskAdapter
@@ -17,6 +18,7 @@ class ListTaskFragment : Fragment() {
     private lateinit var binding: FragmentListTaskBinding
     private val adapter: ListTaskAdapter by lazy { ListTaskAdapter() }
     private val taskViewModel: TaskViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,8 +33,17 @@ class ListTaskFragment : Fragment() {
         setHasOptionsMenu(true)
         setupRecyclerView()
 
-        taskViewModel.getAllTasks.observe(viewLifecycleOwner) {
-            adapter.setData(it)
+        taskViewModel.getAllTasks.observe(viewLifecycleOwner) { data ->
+            sharedViewModel.checkIfDatabaseEmpty(data)
+            adapter.setData(data)
+        }
+
+        sharedViewModel.emptyDatabase.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.ivEmptyList.visibility = View.VISIBLE
+            } else {
+                binding.ivEmptyList.visibility = View.INVISIBLE
+            }
         }
 
         return binding.root

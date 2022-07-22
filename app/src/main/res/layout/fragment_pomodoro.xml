@@ -41,7 +41,8 @@
         android:src="@drawable/ic_play_arrow"
         app:layout_constraintBottom_toTopOf="@id/tvTask"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/start" />
 
     <ImageView
         android:id="@+id/ivStopPomodoro"
@@ -52,13 +53,13 @@
         android:src="@drawable/ic_stop"
         app:layout_constraintTop_toTopOf="@id/ivStartPausePomodoro"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="@string/stop" />
 
     <TextView
         android:id="@+id/tvTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task1"
         android:textColor="@color/white"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/tvTaskPomodoros"
