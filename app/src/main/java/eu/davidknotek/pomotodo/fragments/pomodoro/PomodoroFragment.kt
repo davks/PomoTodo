@@ -79,5 +79,9 @@ class PomodoroFragment : Fragment() {
         pomodoroViewModel.task.observe(viewLifecycleOwner) {
             binding.tvTaskPomodoros.text = formatPomodoroFinished(args.currentItem.numberOfPomodoros, it.numberOfFinishedPomodoros)
         }
+
+        pomodoroViewModel.status.observe(viewLifecycleOwner) {
+            binding.tvStatus.text = it
+        }
     }
 }

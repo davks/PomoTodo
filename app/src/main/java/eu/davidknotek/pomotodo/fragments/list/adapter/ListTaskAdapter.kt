@@ -3,6 +3,7 @@ package eu.davidknotek.pomotodo.fragments.list.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 import eu.davidknotek.pomotodo.databinding.RowTaskBinding
@@ -32,8 +33,10 @@ class ListTaskAdapter: RecyclerView.Adapter<ListTaskAdapter.MyViewHolder>() {
     }
 
     fun setData(tasks: List<TaskEntity>) {
+        val taskDiffUtil = TaskDiffUtil(data, tasks)
+        val taskDiffUtilResult = DiffUtil.calculateDiff(taskDiffUtil)
         data = tasks
-        notifyDataSetChanged()
+        taskDiffUtilResult.dispatchUpdatesTo(this)
     }
 
     private fun editTask(taskEntity: TaskEntity, holder: MyViewHolder) {

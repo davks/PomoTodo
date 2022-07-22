@@ -23,20 +23,22 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     var isPomodoroRunning = MutableLiveData<Boolean>()
     var task = MutableLiveData<TaskEntity>()
     var currentTimeDurationInMillis = MutableLiveData<Long>()
+    var status = MutableLiveData<String>()
 
     private var pomodoroTimer: CountDownTimer? = null
     private var workDurationInMillis: Long = 10000
     private var breakDurationInMillis: Long = 5000
 
-    private var endOfBreak = false // isBreak
+    private var isBreakEnabled = true
 
     init {
         repository = TaskRepositoryImpl(taskDao)
         this.task.value = taskEntity
         settingsPomodoro.load()
-        workDurationInMillis = 1000 * 60 * settingsPomodoro.workDuration.toLong() //(1s*60=1min*25min)
-        breakDurationInMillis = 1000 * 60 * settingsPomodoro.breakDuration.toLong()
+//        workDurationInMillis = 1000 * 60 * settingsPomodoro.workDuration.toLong() //(1s*60=1min*25min)
+//        breakDurationInMillis = 1000 * 60 * settingsPomodoro.breakDuration.toLong()
         currentTimeDurationInMillis.value = workDurationInMillis
+        status.value = ""
     }
 
     fun updateTask() {
@@ -67,7 +69,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     fun stopTask() {
         resetPomodoro()
-        endOfBreak = false
+        isBreakEnabled = true
     }
 
     fun formatPomodoroTime(millis: Long): String {
@@ -85,12 +87,12 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
             override fun onFinish() {
                 resetPomodoro()
-                if (!endOfBreak) {
+                if (isBreakEnabled) {
                     updateTask()
                     startBreakDuration()
-                    endOfBreak = true
+                    isBreakEnabled = false
                 } else {
-                    endOfBreak = false
+                    isBreakEnabled = true
                 }
             }
         }.start()
@@ -107,6 +109,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
         }
         isPomodoroRunning.value = false
         currentTimeDurationInMillis.value = workDurationInMillis
+        status.value = ""
     }
 
     private fun startBreakDuration() {
