@@ -4,13 +4,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import eu.davidknotek.pomotodo.R
 import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModel
+import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModelFactory
 import eu.davidknotek.pomotodo.databinding.FragmentPomodoroBinding
 import eu.davidknotek.pomotodo.util.setPomodoroString
 
@@ -18,7 +17,9 @@ import eu.davidknotek.pomotodo.util.setPomodoroString
 class PomodoroFragment : Fragment() {
     private lateinit var binding: FragmentPomodoroBinding
     private val args by navArgs<PomodoroFragmentArgs>()
-    private val pomodoroViewModel: PomodoroViewModel by viewModels()
+    private val pomodoroViewModel: PomodoroViewModel by viewModels {
+        PomodoroViewModelFactory(requireActivity().application, args.currentItem)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,7 +55,7 @@ class PomodoroFragment : Fragment() {
 
     private fun setupListeners() {
         binding.ivStartPausePomodoro.setOnClickListener {
-            pomodoroViewModel.startOrPauseTask(args.currentItem)
+            pomodoroViewModel.startOrPauseTask()
         }
 
         binding.ivStopPomodoro.setOnClickListener {
@@ -75,9 +76,8 @@ class PomodoroFragment : Fragment() {
             }
         }
 
-        pomodoroViewModel.numberOfFinishedPomodoros.observe(viewLifecycleOwner) {
-            binding.tvTaskPomodoros.text = setPomodoroString(args.currentItem.numberOfPomodoros, it)
-            args.currentItem.numberOfFinishedPomodoros = it
+        pomodoroViewModel.task.observe(viewLifecycleOwner) {
+            binding.tvTaskPomodoros.text = setPomodoroString(args.currentItem.numberOfPomodoros, it.numberOfFinishedPomodoros)
         }
     }
 

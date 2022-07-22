@@ -13,26 +13,26 @@ import eu.davidknotek.pomotodo.data.repository.TaskRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PomodoroViewModel(application: Application): AndroidViewModel(application) {
+class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
+    AndroidViewModel(application) {
     private val taskDao = TaskDatabase.getDatabase(application).taskDao()
     private val repository: TaskRepository
 
     var isPomodoroRunning = MutableLiveData<Boolean>()
-        private set
     var restSeconds = MutableLiveData<Int>()
-    var numberOfFinishedPomodoros = MutableLiveData<Int>()
+    var task = MutableLiveData<TaskEntity>()
 
     private var pomodoroTimer: CountDownTimer? = null
     private var workDuration: Long = 1000 * 10 //(1s*60=1min*25min)
     private var pauseDuration: Long = 1000 * 5
-    private var restTimeDuration = workDuration
 
+    private var restTimeDuration = workDuration
     private var isPauseDurationFinished = false
-    lateinit var taskEntity: TaskEntity
 
     init {
         repository = TaskRepositoryImpl(taskDao)
         restSeconds.value = (restTimeDuration / 1000).toInt()
+        this.task.value = taskEntity
     }
 
     fun updateTask() {
@@ -41,19 +41,17 @@ class PomodoroViewModel(application: Application): AndroidViewModel(application)
         val description = taskEntity.description
         val numberOfPomodoros = taskEntity.numberOfPomodoros
         val numberOfFinishedPomodoros = taskEntity.numberOfFinishedPomodoros + 1
-        this.numberOfFinishedPomodoros.value = numberOfFinishedPomodoros
 
-        taskEntity = TaskEntity(id, title, description, numberOfPomodoros, numberOfFinishedPomodoros)
+        taskEntity =
+            TaskEntity(id, title, description, numberOfPomodoros, numberOfFinishedPomodoros)
+        task.value = taskEntity
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateTask(taskEntity)
         }
     }
 
-    fun startOrPauseTask(taskEntity: TaskEntity) {
-        this.taskEntity = taskEntity
-        numberOfFinishedPomodoros.value = taskEntity.numberOfFinishedPomodoros
-
+    fun startOrPauseTask() {
         isPomodoroRunning.value = if (isPomodoroRunning.value == true) {
             pausePomodoro()
             false
@@ -61,10 +59,6 @@ class PomodoroViewModel(application: Application): AndroidViewModel(application)
             startPomodoro()
             true
         }
-    }
-
-    fun setCurrentTask(taskEntity: TaskEntity) {
-        this.taskEntity = taskEntity
     }
 
     fun stopTask() {
@@ -90,7 +84,6 @@ class PomodoroViewModel(application: Application): AndroidViewModel(application)
                     isPauseDurationFinished = false
                 }
             }
-
         }.start()
     }
 
@@ -113,7 +106,6 @@ class PomodoroViewModel(application: Application): AndroidViewModel(application)
         restSeconds.value = (restTimeDuration / 1000).toInt()
         android.os.Handler(Looper.getMainLooper()).postDelayed({
             startPomodoro()
-        }, 2000 // value in milliseconds
-        )
+        }, 2000)
     }
 }
