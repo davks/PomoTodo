@@ -10,7 +10,8 @@
     <string name="delete_all">Delete All</string>
     <string name="delete">Delete</string>
     <string name="pomodoro_text">Pomodoro:</string>
-    <string name="automatic_start_of_the_short_break">Automatic start of the short break</string>
+    <string name="automatic_start_of_the_break">Automatic start of the break</string>
+    <string name="automatic_start_of_the_work">Automatic start of the work</string>
     <string name="length_of_short_break">Length of the short break</string>
     <string name="length_of_pomo">Length of the pomodoro</string>
     <string name="settings">Settings</string>

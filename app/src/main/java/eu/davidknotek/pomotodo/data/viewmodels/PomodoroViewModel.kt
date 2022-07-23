@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.CountDownTimer
 import android.os.Looper
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,7 +14,7 @@ import eu.davidknotek.pomotodo.data.TaskDatabase
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 import eu.davidknotek.pomotodo.data.repository.TaskRepository
 import eu.davidknotek.pomotodo.data.repository.TaskRepositoryImpl
-import eu.davidknotek.pomotodo.util.DataSavedPomo
+import eu.davidknotek.pomotodo.util.DataPomo
 import eu.davidknotek.pomotodo.util.SettingsPomodoro
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     private val taskDao = TaskDatabase.getDatabase(application).taskDao()
     private val repository: TaskRepository
     private val settingsPomodoro = SettingsPomodoro(application.applicationContext)
-    private val dataSavedPomo = DataSavedPomo(application.applicationContext)
+    private val savedDataPomo = DataPomo(application.applicationContext)
 
     var isPomodoroRunning = MutableLiveData<Boolean>()
     var currentTask = MutableLiveData<TaskEntity>()
@@ -45,7 +46,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     init {
         repository = TaskRepositoryImpl(taskDao)
         currentTask.value = taskEntity
-        pomodoroCountFinished = dataSavedPomo.pomodoroCount
+        pomodoroCountFinished = savedDataPomo.pomodoroCount
         statusText.value = ""
         setDurations()
         checkNewDay()
@@ -63,12 +64,12 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     }
 
     fun stopTask() {
-        if (isPomodoroRunning.value == true) {
-            resetPomodoro()
-            currentStatus = PomodoroStatus.WORK
-            //pomodoroCountFinished = 0
+        if (isPomodoroRunning.value != true) {
             savePomodoroCountFinished(0)
+            Toast.makeText(app.applicationContext, "Four pomodore cycle was interrupted.", Toast.LENGTH_SHORT).show()
         }
+        resetPomodoro()
+        currentStatus = PomodoroStatus.WORK
     }
 
     fun formatPomodoroTime(millis: Long): String {
@@ -98,9 +99,10 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
                     updateTask()
                     savePomodoroCountFinished(pomodoroCountFinished + 1)
                     setShortOrLongBreak()
-                    startBreakDuration()
+                    autoStartBreakDuration()
                 } else {
                     currentStatus = PomodoroStatus.WORK
+                    autoStartWorkDuration()
                 }
             }
         }.start()
@@ -136,8 +138,16 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
         }
     }
 
-    private fun startBreakDuration() {
+    private fun autoStartBreakDuration() {
         if (settingsPomodoro.breakContinues) {
+            android.os.Handler(Looper.getMainLooper()).postDelayed({
+                startPomodoro()
+            }, 1000)
+        }
+    }
+
+    private fun autoStartWorkDuration() {
+        if (settingsPomodoro.workContinues) {
             android.os.Handler(Looper.getMainLooper()).postDelayed({
                 startPomodoro()
             }, 1000)
@@ -163,7 +173,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
             PomodoroStatus.SHORT_BREAK -> {
                 statusText.value = "${app.resources.getString(R.string.statusShortBreak)} ($pomodoroCountFinished/4)"
             }
-            else -> {
+            PomodoroStatus.LONG_BREAK -> {
                 statusText.value = app.resources.getString(R.string.statusLongBreak)
             }
         }
@@ -171,8 +181,8 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     private fun savePomodoroCountFinished(count: Int) {
         pomodoroCountFinished = count
-        dataSavedPomo.pomodoroCount = count
-        dataSavedPomo.save()
+        savedDataPomo.pomodoroCount = count
+        savedDataPomo.save()
     }
 
     private fun setDurations() {
@@ -184,11 +194,11 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     private fun checkNewDay() {
         val currentDate = LocalDate.now().toString()
-        if (dataSavedPomo.date != currentDate) {
+        if (savedDataPomo.date != currentDate) {
             pomodoroCountFinished = 0
-            dataSavedPomo.pomodoroCount = 0
-            dataSavedPomo.date = currentDate
-            dataSavedPomo.save()
+            savedDataPomo.pomodoroCount = 0
+            savedDataPomo.date = currentDate
+            savedDataPomo.save()
         }
     }
 

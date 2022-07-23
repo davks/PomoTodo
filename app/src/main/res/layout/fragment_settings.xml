@@ -95,21 +95,40 @@
 
 
     <TextView
-        android:id="@+id/tvAutomaticShortBreak"
+        android:id="@+id/tvAutomaticBreak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/automatic_start_of_the_short_break"
+        android:text="@string/automatic_start_of_the_break"
         app:layout_constraintTop_toBottomOf="@id/sbLengthOfLongBreak"
         app:layout_constraintStart_toStartOf="@id/lengthOfPomoText"/>
 
     <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/swAutomaticStartBreak"
+        android:id="@+id/swAutomaticBreak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:checked="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvAutomaticShortBreak"
-        app:layout_constraintBottom_toBottomOf="@+id/tvAutomaticShortBreak"/>
+        app:layout_constraintTop_toTopOf="@+id/tvAutomaticBreak"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAutomaticBreak"/>
+
+    <TextView
+        android:id="@+id/tvAutomaticWork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/automatic_start_of_the_work"
+        app:layout_constraintTop_toBottomOf="@id/tvAutomaticBreak"
+        app:layout_constraintStart_toStartOf="@id/lengthOfPomoText"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/swAutomaticWork"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvAutomaticWork"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAutomaticWork"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

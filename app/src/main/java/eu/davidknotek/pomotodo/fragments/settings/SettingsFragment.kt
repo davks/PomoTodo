@@ -30,7 +30,8 @@ class SettingsFragment : Fragment() {
         binding.tvLengthOfPomo.text = settingsPomodoro.workDuration.toString()
         binding.tvLengthOfShortBreak.text = settingsPomodoro.shortBreakDuration.toString()
         binding.tvLengthOfLongBreak.text = settingsPomodoro.longBreakDuration.toString()
-        binding.swAutomaticStartBreak.isChecked = settingsPomodoro.breakContinues
+        binding.swAutomaticBreak.isChecked = settingsPomodoro.breakContinues
+        binding.swAutomaticWork.isChecked = settingsPomodoro.workContinues
 
         binding.sbLengthOfPomodoro.progress = settingsPomodoro.workDuration
         binding.sbLengthOfShortBreak.progress = settingsPomodoro.shortBreakDuration
@@ -77,8 +78,13 @@ class SettingsFragment : Fragment() {
             }
         })
 
-        binding.swAutomaticStartBreak.setOnClickListener {
-            settingsPomodoro.breakContinues = binding.swAutomaticStartBreak.isChecked
+        binding.swAutomaticBreak.setOnClickListener {
+            settingsPomodoro.breakContinues = binding.swAutomaticBreak.isChecked
+            settingsPomodoro.save()
+        }
+
+        binding.swAutomaticWork.setOnClickListener {
+            settingsPomodoro.workContinues = binding.swAutomaticWork.isChecked
             settingsPomodoro.save()
         }
     }

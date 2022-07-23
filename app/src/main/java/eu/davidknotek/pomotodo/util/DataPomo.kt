@@ -2,7 +2,7 @@ package eu.davidknotek.pomotodo.util
 
 import android.content.Context
 
-class DataSavedPomo(val context: Context) {
+class DataPomo(val context: Context) {
     var date: String = ""
     var pomodoroCount: Int = 0
 
