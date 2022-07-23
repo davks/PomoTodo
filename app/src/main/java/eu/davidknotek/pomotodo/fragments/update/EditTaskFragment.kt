@@ -29,11 +29,8 @@ class EditTaskFragment : Fragment() {
             override fun onProgressChanged(p0: SeekBar?, currentProgress: Int, userInitiated: Boolean) {
                 binding.tvPomodoro.text = currentProgress.toString()
             }
-
             override fun onStartTrackingTouch(p0: SeekBar?) {}
-
             override fun onStopTrackingTouch(p0: SeekBar?) {}
-
         })
 
         setHasOptionsMenu(true)
@@ -69,11 +66,11 @@ class EditTaskFragment : Fragment() {
 
     private fun saveTask() {
         val title = binding.etTitle.text.toString()
-        val numberOfPomodoros = binding.sbPomodoro.progress
+        val numberOfPomodoro = binding.sbPomodoro.progress
         val description = binding.etDescription.text.toString()
 
         if (title.isNotEmpty()) {
-            val task = TaskEntity(args.currentItem.id, title, description, numberOfPomodoros.toInt(), args.currentItem.numberOfFinishedPomodoros)
+            val task = TaskEntity(args.currentItem.id, title, description, numberOfPomodoro, args.currentItem.numberOfFinishedPomodoros)
             taskViewModel.updateTask(task)
             findNavController().navigate(R.id.action_editTaskFragment_to_taskListFragment)
         } else {
@@ -88,7 +85,7 @@ class EditTaskFragment : Fragment() {
                 findNavController().navigate(R.id.action_editTaskFragment_to_taskListFragment)
             }
             .setNegativeButton("No") {_, _ ->}
-            .setTitle("Delete task")
+            .setTitle("Delete task?")
             .setMessage("Are you sure you want to delete the task: ${args.currentItem.title}?")
             .create().show()
     }

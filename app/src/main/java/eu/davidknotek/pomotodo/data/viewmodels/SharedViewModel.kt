@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 
 class SharedViewModel(application: Application): AndroidViewModel(application) {
-    val emptyDatabase = MutableLiveData(false)
+    val isEmptyDatabase = MutableLiveData(false)
 
     fun checkIfDatabaseEmpty(tasks: List<TaskEntity>) {
-        emptyDatabase.value = tasks.isEmpty()
+        isEmptyDatabase.value = tasks.isEmpty()
     }
 }

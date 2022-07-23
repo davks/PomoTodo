@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 import eu.davidknotek.pomotodo.databinding.RowTaskBinding
 import eu.davidknotek.pomotodo.fragments.list.ListTaskFragmentDirections
-import eu.davidknotek.pomotodo.util.formatPomodoroFinished
+import eu.davidknotek.pomotodo.util.formatFinishedPomodoro
 
 class ListTaskAdapter: RecyclerView.Adapter<ListTaskAdapter.MyViewHolder>() {
-    private var data = emptyList<TaskEntity>()
+    private var tasks = emptyList<TaskEntity>()
 
     class MyViewHolder(val itemHolding: RowTaskBinding): RecyclerView.ViewHolder(itemHolding.root)
 
@@ -20,22 +20,22 @@ class ListTaskAdapter: RecyclerView.Adapter<ListTaskAdapter.MyViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentItem = data[position]
+        val currentItem = tasks[position]
         holder.itemHolding.tvTitle.text = currentItem.title
-        holder.itemHolding.tvPomodoro.text = formatPomodoroFinished(currentItem.numberOfPomodoros, currentItem.numberOfFinishedPomodoros)
+        holder.itemHolding.tvPomodoro.text = formatFinishedPomodoro(currentItem.numberOfPomodoros, currentItem.numberOfFinishedPomodoros)
 
         holder.itemHolding.rowBackground.setOnClickListener { editTask(currentItem, holder) }
         holder.itemHolding.ivStartPomodoro.setOnClickListener { startPomodoro(currentItem, holder) }
     }
 
     override fun getItemCount(): Int {
-        return data.size
+        return tasks.size
     }
 
-    fun setData(tasks: List<TaskEntity>) {
-        val taskDiffUtil = TaskDiffUtil(data, tasks)
+    fun setData(newTasks: List<TaskEntity>) {
+        val taskDiffUtil = TaskDiffUtil(tasks, newTasks)
         val taskDiffUtilResult = DiffUtil.calculateDiff(taskDiffUtil)
-        data = tasks
+        tasks = newTasks
         taskDiffUtilResult.dispatchUpdatesTo(this)
     }
 

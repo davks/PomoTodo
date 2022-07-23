@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.ListAdapter
 import eu.davidknotek.pomotodo.R
 import eu.davidknotek.pomotodo.data.viewmodels.SharedViewModel
 import eu.davidknotek.pomotodo.data.viewmodels.TaskViewModel
@@ -32,21 +31,24 @@ class ListTaskFragment : Fragment() {
 
         setHasOptionsMenu(true)
         setupRecyclerView()
+        setObservers()
 
+        return binding.root
+    }
+
+    private fun setObservers() {
         taskViewModel.getAllTasks.observe(viewLifecycleOwner) { data ->
-            sharedViewModel.checkIfDatabaseEmpty(data)
+            sharedViewModel.checkIfDatabaseEmpty(data) // because the database can be empty
             adapter.setData(data)
         }
 
-        sharedViewModel.emptyDatabase.observe(viewLifecycleOwner) {
+        sharedViewModel.isEmptyDatabase.observe(viewLifecycleOwner) {
             if (it) {
                 binding.ivEmptyList.visibility = View.VISIBLE
             } else {
                 binding.ivEmptyList.visibility = View.INVISIBLE
             }
         }
-
-        return binding.root
     }
 
     private fun setupRecyclerView() {
@@ -74,7 +76,7 @@ class ListTaskFragment : Fragment() {
 
     private fun deleteAllTasks() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Delete All tasks")
+            .setTitle("Delete All tasks?")
             .setMessage("Are you sure you want to delete ALL tasks?")
             .setPositiveButton("yes") {_,_->
                 taskViewModel.deleteAllTasks()

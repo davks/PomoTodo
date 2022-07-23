@@ -20,6 +20,6 @@ class TaskRepositoryImpl(private val taskDao: TaskDao): TaskRepository {
     }
 
     override suspend fun deleteAllTasks() {
-        taskDao.deleteAllTask()
+        taskDao.deleteAllTasks()
     }
 }

@@ -19,7 +19,6 @@ class SettingsFragment : Fragment() {
     ): View {
         binding = FragmentSettingsBinding.inflate(layoutInflater)
         settingsPomodoro = SettingsPomodoro(requireContext())
-        settingsPomodoro.load()
 
         setSettingsFragment()
         setSettingsListeners()
@@ -27,9 +26,19 @@ class SettingsFragment : Fragment() {
         return binding.root
     }
 
+    private fun setSettingsFragment() {
+        binding.tvLengthOfPomo.text = settingsPomodoro.workDuration.toString()
+        binding.tvLengthOfShortBreak.text = settingsPomodoro.shortBreakDuration.toString()
+        binding.tvLengthOfLongBreak.text = settingsPomodoro.longBreakDuration.toString()
+        binding.swAutomaticStartBreak.isChecked = settingsPomodoro.breakContinues
+
+        binding.sbLengthOfPomodoro.progress = settingsPomodoro.workDuration
+        binding.sbLengthOfShortBreak.progress = settingsPomodoro.shortBreakDuration
+        binding.sbLengthOfLongBreak.progress = settingsPomodoro.longBreakDuration
+    }
+
     private fun setSettingsListeners() {
-        binding.sbLengthOfPomodoro.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
+        binding.sbLengthOfPomodoro.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, currentProgress: Int, p2: Boolean) {
                 binding.tvLengthOfPomo.text = currentProgress.toString()
                 settingsPomodoro.workDuration = currentProgress
@@ -40,13 +49,12 @@ class SettingsFragment : Fragment() {
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 settingsPomodoro.save()
             }
-
         })
 
-        binding.sbLengthOfBreak.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+        binding.sbLengthOfShortBreak.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, currentProgress: Int, p2: Boolean) {
-                binding.tvLengthOfBreak.text = currentProgress.toString()
-                settingsPomodoro.breakDuration = currentProgress
+                binding.tvLengthOfShortBreak.text = currentProgress.toString()
+                settingsPomodoro.shortBreakDuration = currentProgress
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) { }
@@ -54,21 +62,24 @@ class SettingsFragment : Fragment() {
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 settingsPomodoro.save()
             }
+        })
 
+        binding.sbLengthOfLongBreak.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, currentProgress: Int, p2: Boolean) {
+                binding.tvLengthOfLongBreak.text = currentProgress.toString()
+                settingsPomodoro.longBreakDuration = currentProgress
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) { }
+
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                settingsPomodoro.save()
+            }
         })
 
         binding.swAutomaticStartBreak.setOnClickListener {
             settingsPomodoro.breakContinues = binding.swAutomaticStartBreak.isChecked
             settingsPomodoro.save()
         }
-    }
-
-    private fun setSettingsFragment() {
-        binding.tvLengthOfPomo.text = settingsPomodoro.workDuration.toString()
-        binding.tvLengthOfBreak.text = settingsPomodoro.breakDuration.toString()
-        binding.swAutomaticStartBreak.isChecked = settingsPomodoro.breakContinues
-
-        binding.sbLengthOfPomodoro.progress = settingsPomodoro.workDuration
-        binding.sbLengthOfBreak.progress = settingsPomodoro.breakDuration
     }
 }

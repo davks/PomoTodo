@@ -1,5 +1,5 @@
 package eu.davidknotek.pomotodo.data.viewmodels
 
 enum class PomodoroStatus {
-    WORK, BREAK
+    WORK, SHORT_BREAK, LONG_BREAK
 }

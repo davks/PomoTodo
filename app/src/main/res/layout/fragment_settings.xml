@@ -36,16 +36,16 @@
         app:layout_constraintBottom_toBottomOf="@id/sbLengthOfPomodoro"/>
 
     <TextView
-        android:id="@+id/lengthOfBreakText"
+        android:id="@+id/lengthOfShortBreakText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/length_of_break"
+        android:text="@string/length_of_short_break"
         android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/sbLengthOfPomodoro"
         app:layout_constraintStart_toStartOf="@id/lengthOfPomoText"/>
 
     <SeekBar
-        android:id="@+id/sbLengthOfBreak"
+        android:id="@+id/sbLengthOfShortBreak"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -53,24 +53,54 @@
         android:min="5"
         android:max="30"
         android:progress="5"
-        app:layout_constraintTop_toBottomOf="@id/lengthOfBreakText"
-        app:layout_constraintEnd_toStartOf="@+id/tvLengthOfBreak"/>
+        app:layout_constraintTop_toBottomOf="@id/lengthOfShortBreakText"
+        app:layout_constraintEnd_toStartOf="@+id/tvLengthOfShortBreak"/>
 
     <TextView
-        android:id="@+id/tvLengthOfBreak"
+        android:id="@+id/tvLengthOfShortBreak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/sbLengthOfBreak"
-        app:layout_constraintBottom_toBottomOf="@id/sbLengthOfBreak"/>
+        app:layout_constraintTop_toTopOf="@id/sbLengthOfShortBreak"
+        app:layout_constraintBottom_toBottomOf="@id/sbLengthOfShortBreak"/>
 
     <TextView
-        android:id="@+id/tvAutomaticStartBreak"
+        android:id="@+id/lengthOfLongBreakText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/length_of_long_break"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/sbLengthOfShortBreak"
+        app:layout_constraintStart_toStartOf="@id/lengthOfPomoText"/>
+
+    <SeekBar
+        android:id="@+id/sbLengthOfLongBreak"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:min="5"
+        android:max="30"
+        android:progress="5"
+        app:layout_constraintTop_toBottomOf="@id/lengthOfLongBreakText"
+        app:layout_constraintEnd_toStartOf="@+id/tvLengthOfLongBreak"/>
+
+    <TextView
+        android:id="@+id/tvLengthOfLongBreak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/sbLengthOfLongBreak"
+        app:layout_constraintBottom_toBottomOf="@id/sbLengthOfLongBreak"/>
+
+
+    <TextView
+        android:id="@+id/tvAutomaticShortBreak"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/automatic_start_of_the_break"
-        app:layout_constraintTop_toBottomOf="@id/sbLengthOfBreak"
+        android:text="@string/automatic_start_of_the_short_break"
+        app:layout_constraintTop_toBottomOf="@id/sbLengthOfLongBreak"
         app:layout_constraintStart_toStartOf="@id/lengthOfPomoText"/>
 
     <androidx.appcompat.widget.SwitchCompat
@@ -79,7 +109,7 @@
         android:layout_height="wrap_content"
         android:checked="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvAutomaticStartBreak"
-        app:layout_constraintBottom_toBottomOf="@+id/tvAutomaticStartBreak"/>
+        app:layout_constraintTop_toTopOf="@+id/tvAutomaticShortBreak"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAutomaticShortBreak"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

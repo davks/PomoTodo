@@ -11,7 +11,7 @@ import eu.davidknotek.pomotodo.R
 import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModel
 import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModelFactory
 import eu.davidknotek.pomotodo.databinding.FragmentPomodoroBinding
-import eu.davidknotek.pomotodo.util.formatPomodoroFinished
+import eu.davidknotek.pomotodo.util.formatFinishedPomodoro
 
 
 class PomodoroFragment : Fragment() {
@@ -48,9 +48,14 @@ class PomodoroFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.show()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        pomodoroViewModel.exit()
+    }
+
     private fun setupPomodoroFragment() {
         binding.tvTask.text = args.currentItem.title
-        binding.tvTaskPomodoros.text = formatPomodoroFinished(args.currentItem.numberOfPomodoros, args.currentItem.numberOfFinishedPomodoros)
+        binding.tvTaskPomodoros.text = formatFinishedPomodoro(args.currentItem.numberOfPomodoros, args.currentItem.numberOfFinishedPomodoros)
     }
 
     private fun setupListeners() {
@@ -76,11 +81,11 @@ class PomodoroFragment : Fragment() {
             }
         }
 
-        pomodoroViewModel.task.observe(viewLifecycleOwner) {
-            binding.tvTaskPomodoros.text = formatPomodoroFinished(args.currentItem.numberOfPomodoros, it.numberOfFinishedPomodoros)
+        pomodoroViewModel.currentTask.observe(viewLifecycleOwner) {
+            binding.tvTaskPomodoros.text = formatFinishedPomodoro(args.currentItem.numberOfPomodoros, it.numberOfFinishedPomodoros)
         }
 
-        pomodoroViewModel.status.observe(viewLifecycleOwner) {
+        pomodoroViewModel.statusText.observe(viewLifecycleOwner) {
             binding.tvStatus.text = it
         }
     }
