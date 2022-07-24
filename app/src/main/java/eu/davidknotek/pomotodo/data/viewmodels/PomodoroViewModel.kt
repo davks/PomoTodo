@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.net.Uri
 import android.os.CountDownTimer
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -14,11 +15,11 @@ import eu.davidknotek.pomotodo.data.TaskDatabase
 import eu.davidknotek.pomotodo.data.models.TaskEntity
 import eu.davidknotek.pomotodo.data.repository.TaskRepository
 import eu.davidknotek.pomotodo.data.repository.TaskRepositoryImpl
-import eu.davidknotek.pomotodo.util.DataPomo
+import eu.davidknotek.pomotodo.util.StoredData
 import eu.davidknotek.pomotodo.util.SettingsPomodoro
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     AndroidViewModel(application) {
@@ -26,7 +27,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     private val taskDao = TaskDatabase.getDatabase(application).taskDao()
     private val repository: TaskRepository
     private val settingsPomodoro = SettingsPomodoro(application.applicationContext)
-    private val savedDataPomo = DataPomo(application.applicationContext)
+    private val storedData = StoredData(application.applicationContext)
 
     var isPomodoroRunning = MutableLiveData<Boolean>()
     var currentTask = MutableLiveData<TaskEntity>()
@@ -43,13 +44,17 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     private var player: MediaPlayer? = null
 
+    companion object {
+        private const val NUMBER_OF_CYCLES = 4
+    }
+
     init {
         repository = TaskRepositoryImpl(taskDao)
         currentTask.value = taskEntity
-        pomodoroCountFinished = savedDataPomo.pomodoroCount
+        pomodoroCountFinished = storedData.pomodoroCount
         statusText.value = ""
         setDurations()
-        checkNewDay()
+        checkLongBrakePassed()
         mediaPlayerSetup()
     }
 
@@ -65,7 +70,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
 
     fun stopTask() {
         if (isPomodoroRunning.value != true) {
-            savePomodoroCountFinished(0)
+            saveNewPomodoroData(0)
             Toast.makeText(app.applicationContext, "Four pomodore cycle was interrupted.", Toast.LENGTH_SHORT).show()
         }
         resetPomodoro()
@@ -97,7 +102,7 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
                 player?.start()
                 if (currentStatus == PomodoroStatus.WORK) {
                     updateTask()
-                    savePomodoroCountFinished(pomodoroCountFinished + 1)
+                    saveNewPomodoroData(pomodoroCountFinished + 1)
                     setShortOrLongBreak()
                     autoStartBreakDuration()
                 } else {
@@ -155,10 +160,10 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     }
 
     private fun setShortOrLongBreak() {
-        if (pomodoroCountFinished == 4) {
+        if (pomodoroCountFinished == NUMBER_OF_CYCLES) {
             currentTimeDurationInMillis.value = longBreakDurationInMillis
             currentStatus = PomodoroStatus.LONG_BREAK
-            savePomodoroCountFinished(0)
+            saveNewPomodoroData(0)
         } else {
             currentTimeDurationInMillis.value = shortBreakDurationInMillis
             currentStatus = PomodoroStatus.SHORT_BREAK
@@ -168,10 +173,10 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
     private fun setStatusString() {
         when (currentStatus) {
             PomodoroStatus.WORK -> {
-                statusText.value = "${app.resources.getString(R.string.statusWork)} (${pomodoroCountFinished + 1}/4)"
+                statusText.value = "${app.resources.getString(R.string.statusWork)} (${pomodoroCountFinished + 1}/$NUMBER_OF_CYCLES)"
             }
             PomodoroStatus.SHORT_BREAK -> {
-                statusText.value = "${app.resources.getString(R.string.statusShortBreak)} ($pomodoroCountFinished/4)"
+                statusText.value = "${app.resources.getString(R.string.statusShortBreak)} ($pomodoroCountFinished/$NUMBER_OF_CYCLES)"
             }
             PomodoroStatus.LONG_BREAK -> {
                 statusText.value = app.resources.getString(R.string.statusLongBreak)
@@ -179,10 +184,14 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
         }
     }
 
-    private fun savePomodoroCountFinished(count: Int) {
-        pomodoroCountFinished = count
-        savedDataPomo.pomodoroCount = count
-        savedDataPomo.save()
+    /**
+     * We need to remember the time of the last Pomodoro and the number of Pomodoros already passed.
+     */
+    private fun saveNewPomodoroData(pomodoroCount: Int) {
+        pomodoroCountFinished = pomodoroCount
+        storedData.pomodoroCount = pomodoroCount
+        storedData.dateTime = LocalDateTime.now().toString()
+        storedData.save()
     }
 
     private fun setDurations() {
@@ -192,13 +201,14 @@ class PomodoroViewModel(application: Application, var taskEntity: TaskEntity) :
         currentTimeDurationInMillis.value = workDurationInMillis
     }
 
-    private fun checkNewDay() {
-        val currentDate = LocalDate.now().toString()
-        if (savedDataPomo.date != currentDate) {
+    private fun checkLongBrakePassed() {
+        val oldDateTime = LocalDateTime.parse(storedData.dateTime)
+        val currentDateTime = LocalDateTime.now()
+        if ((currentDateTime.minute - oldDateTime.minute) >= settingsPomodoro.longBreakDuration) {
             pomodoroCountFinished = 0
-            savedDataPomo.pomodoroCount = 0
-            savedDataPomo.date = currentDate
-            savedDataPomo.save()
+            storedData.pomodoroCount = 0
+            storedData.dateTime = currentDateTime.toString()
+            storedData.save()
         }
     }
 

@@ -79,8 +79,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:min="5"
-        android:max="30"
+        android:min="15"
+        android:max="45"
         android:progress="5"
         app:layout_constraintTop_toBottomOf="@id/lengthOfLongBreakText"
         app:layout_constraintEnd_toStartOf="@+id/tvLengthOfLongBreak"/>
