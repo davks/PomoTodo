@@ -1,23 +1,16 @@
 package eu.davidknotek.pomotodo.fragments.pomodoro
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.widget.RemoteViews
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import eu.davidknotek.pomotodo.R
 import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModel
 import eu.davidknotek.pomotodo.data.viewmodels.PomodoroViewModelFactory
+import eu.davidknotek.pomotodo.data.viewmodels.SharedViewModel
 import eu.davidknotek.pomotodo.databinding.FragmentPomodoroBinding
 import eu.davidknotek.pomotodo.util.formatFinishedPomodoro
 
@@ -28,11 +21,7 @@ class PomodoroFragment : Fragment() {
     private val pomodoroViewModel: PomodoroViewModel by viewModels {
         PomodoroViewModelFactory(requireActivity().application, args.currentItem)
     }
-
-    // Notification
-    private val NOTIFY_ID = 1000
-    private lateinit var notificationManager: NotificationManager
-    private lateinit var notification: Notification
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +32,6 @@ class PomodoroFragment : Fragment() {
         setupPomodoroFragment()
         setupListeners()
         setupObservers()
-        showNotification()
 
         return binding.root
     }
@@ -65,29 +53,7 @@ class PomodoroFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         pomodoroViewModel.exit()
-        notificationManager.cancel(NOTIFY_ID)
-//        NotificationManagerCompat.from(requireContext()).cancelAll()
-    }
-
-    private fun showNotification(text: String = "Text"): Notification {
-        val channelID = "10000"
-        notificationManager = requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-        val builder = NotificationCompat.Builder(requireContext(), channelID)
-            .setSmallIcon(R.drawable.ic_av_timer)
-            .setContentTitle(args.currentItem.title)
-            .setContentText(text)
-            .setOnlyAlertOnce(true)
-            .setOngoing(true)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelID, "Pomodoro timer", NotificationManager.IMPORTANCE_DEFAULT)
-            channel.enableVibration(true)
-            notificationManager.createNotificationChannel(channel)
-            builder.setChannelId(channelID)
-        }
-
-        return builder.build()
+        sharedViewModel.cancelNotification()
     }
 
     private fun setupPomodoroFragment() {
@@ -108,9 +74,7 @@ class PomodoroFragment : Fragment() {
     private fun setupObservers() {
         pomodoroViewModel.currentTimeDurationInMillis.observe(viewLifecycleOwner) {
             binding.tvTime.text = pomodoroViewModel.formatPomodoroTime(it)
-
-            notification = showNotification(pomodoroViewModel.formatPomodoroTime(it))
-            notificationManager.notify(NOTIFY_ID, notification)
+            sharedViewModel.refreshNotification(pomodoroViewModel.formatPomodoroTime(it), args.currentItem.title)
         }
 
         pomodoroViewModel.isPomodoroRunning.observe(viewLifecycleOwner) {
