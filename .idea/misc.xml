@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable/ic_play_circle_outline.xml" value="0.132" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.2035" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24895833333333334" />
+        <entry key="app/src/main/res/layout/custom_notification.xml" value="0.24728260869565216" />
         <entry key="app/src/main/res/layout/fragment_add_task.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_add_todo.xml" value="0.24895833333333334" />
         <entry key="app/src/main/res/layout/fragment_edit_task.xml" value="0.24895833333333334" />
